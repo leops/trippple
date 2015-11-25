@@ -7,14 +7,18 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Collection;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Entity;
 
 @Entity
+@Table(name="Users")
 public class User implements Serializable {
 
 	/**
@@ -23,6 +27,7 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 7320015751377606756L;
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
 	private String firstName;

@@ -35,7 +35,7 @@ public class IndexController extends HttpServlet {
 	/**
 	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("trips", this.dao.findAll());
 		request.getRequestDispatcher("index.jsp").forward(request, response);
 	}

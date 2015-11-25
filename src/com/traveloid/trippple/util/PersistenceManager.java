@@ -8,7 +8,7 @@ public class PersistenceManager {
 	
 	public static EntityManagerFactory getFactory() {
 		if(factory == null) {
-			factory = Persistence.createEntityManagerFactory("PU");
+			factory = Persistence.createEntityManagerFactory("Trippple");
 		}
 		
 		return factory;
