@@ -5,9 +5,9 @@
 	<ul>
 		<c:forEach items="${trips}" var="trip">
 			<li>
-				<c:out value="trip.origin.name" />
+				<c:out value="${trip.origin.name}" />
 				->
-				<c:out value="trip.destination.name" />
+				<c:out value="${trip.destination.name}" />
 			</li>
 		</c:forEach>
 	</ul>
