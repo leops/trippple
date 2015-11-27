@@ -23,20 +23,22 @@
 					</span>
 				</div>
 			</form>
-			<ul class="nav navbar-nav">
-				<li class="nav-item active">
-					<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Profile</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Order</a>
-				</li>
-			</ul>
 			<ul class="nav navbar-nav pull-right">
 				<li class="nav-item">
-					<a class="nav-link" href="#">Bag <span class="label label-pill label-info">5</span></a>
+					<a class="nav-link" href="#">
+						<i class="fa fa-shopping-bag"></i>
+						<span class="label label-pill label-info">5</span>
+					</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" id="profileLabel" data-target="#" href="/profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<img src="http://www.campus-booster.net/actorpictures/170237.jpg" alt="170237" height="23">
+					</a>
+					<div class="dropdown-menu" aria-labelledby="profileLabel">
+						<h6 class="dropdown-header">Léo-Paul COUTURIER</h6>
+						<a class="dropdown-item" href="#">Profile</a>
+						<a class="dropdown-item" href="#">Logout</a>
+					</div>
 				</li>
 			</ul>
 		</nav>
@@ -45,7 +47,7 @@
 		</main>
 		<footer class="container-fluid">
 			<p class="text-muted">
-				Footer
+				&copy; Traveloid 2016
 			</p>
 		</footer>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

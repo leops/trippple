@@ -2,10 +2,6 @@ body {
 	padding-top: 70px;
 }
 
-.navbar-form {
-	margin-right: 1rem;
-}
-
 footer {
 	position: absolute;
 	bottom: 0;
@@ -15,4 +11,9 @@ footer {
 
 footer p {
     margin: 1em 0;
+}
+
+.navbar .dropdown-menu {
+	left: unset;
+	right: 0;
 }
