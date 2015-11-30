@@ -6,32 +6,35 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-import com.traveloid.trippple.dao.TripDao;
+import com.traveloid.trippple.dao.CampusDao;
+import com.traveloid.trippple.entity.Campus;
 import com.traveloid.trippple.entity.Trip;
 import com.traveloid.trippple.util.PersistenceManager;
 
-public class JpaTripDao implements TripDao {
-private EntityManager manager = null;
+public class JpaCampusDao implements CampusDao {
 	
-	public JpaTripDao() {
+	private EntityManager manager = null;
+
+	public JpaCampusDao(){
 		this.manager = PersistenceManager.getFactory().createEntityManager();
 	}
-
-	@SuppressWarnings("unchecked") // masque les erreurs liées au cast (ligne 25). De base, il faut vérifier la bonne exécution d'un cast
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Trip> findAll() {
-		Query query = manager.createQuery("SELECT trip FROM Trip as trip");
-
-		return (List<Trip>) query.getResultList();
+	public List<Campus> findAll()
+	{
+		Query query = manager.createQuery("SELECT campus FROM Campus As campus");
+		
+		return (List<Campus>) query.getResultList();
 	}
 	
 	@Override
-	public Trip findById(Long id)
+	public Campus findById(Long id)
 	{
-		Trip result;
+		Campus result;
 		
 		try {
-			result = manager.find(Trip.class, id);
+			result = manager.find(Campus.class, id);
 		}
 		catch (NoResultException e){
 			result = null;
@@ -39,19 +42,19 @@ private EntityManager manager = null;
 		finally {
 			manager.close();
 		}
-		return result;	
+		return result;
 	}
 	
 	@Override
-	public Trip addTrip(Trip trip) // Trip en retour : on pourra exécuter une méthode sur la même ligne que l'ajout, ou vérifier le bon ajout de l'entité en vérifiant que le retour n'est pas égal à null
+	public Campus addCampus(Campus campus)
 	{
-		Trip result = null;
+		Campus result = null;
 		
 		manager.getTransaction().begin();
 		try {
-			manager.persist(trip);
+			manager.persist(campus);
 			manager.getTransaction().commit();
-			result = trip; // Si on a pas réussi l'ajout, on met le trip passé en paramètres dans result
+			result = campus;
 		}
 		finally {
 			if (manager.getTransaction().isActive())
@@ -63,11 +66,11 @@ private EntityManager manager = null;
 	}
 	
 	@Override
-	public void updateTrip(Trip trip)
+	public void updateCampus(Campus campus)
 	{
 		manager.getTransaction().begin();
 		try{
-			manager.merge(trip);
+			manager.merge(campus);
 			manager.getTransaction().commit();
 		}
 		finally {
@@ -79,11 +82,11 @@ private EntityManager manager = null;
 	}
 	
 	@Override
-	public void removeTrip(Trip trip)
+	public void removeCampus(Campus campus)
 	{
 		manager.getTransaction().begin();
 		try{
-			manager.remove(trip);
+			manager.remove(campus);
 			manager.getTransaction().commit();
 		}
 		finally {
@@ -93,5 +96,4 @@ private EntityManager manager = null;
 			}
 		}
 	}
-
 }

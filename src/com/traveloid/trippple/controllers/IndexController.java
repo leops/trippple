@@ -20,7 +20,7 @@ public class IndexController extends HttpServlet {
 	/**
 	 * Necessaire pour Serializable
 	 */
-	private static final long serialVersionUID = -5922364041527559015L;
+	private static final long serialVersionUID = -5922364041527559015L; // Généré aléatoirement par Eclipse
 	private TripDao dao = null;
 	
 	/**
