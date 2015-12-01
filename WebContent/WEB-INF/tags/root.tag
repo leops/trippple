@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<nav class="navbar navbar-fixed-top navbar-dark bg-primary">
-			<a class="navbar-brand" href="#">Trippple</a>
+			<a class="navbar-brand" href="/">Trippple</a>
 			<form class="form-inline navbar-form pull-left" method="POST" action="/search">
 				<div class="input-group">
 					<input type="search" class="form-control" placeholder="Search">
@@ -25,7 +25,7 @@
 			</form>
 			<ul class="nav navbar-nav pull-right">
 				<li class="nav-item">
-					<a class="nav-link" href="#">
+					<a class="nav-link" href="/bag">
 						<i class="fa fa-shopping-bag"></i>
 						<span class="label label-pill label-info">5</span>
 					</a>
@@ -36,8 +36,8 @@
 					</a>
 					<div class="dropdown-menu" aria-labelledby="profileLabel">
 						<h6 class="dropdown-header">Léo-Paul COUTURIER</h6>
-						<a class="dropdown-item" href="#">Profile</a>
-						<a class="dropdown-item" href="#">Logout</a>
+						<a class="dropdown-item" href="/profile">Profile</a>
+						<a class="dropdown-item" href="/logout">Logout</a>
 					</div>
 				</li>
 			</ul>
