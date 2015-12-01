@@ -24,22 +24,28 @@
 				</div>
 			</form>
 			<ul class="nav navbar-nav pull-right">
-				<li class="nav-item">
-					<a class="nav-link" href="bag">
-						<i class="fa fa-shopping-bag"></i>
-						<span class="label label-pill label-info">${bag.size()}</span>
-					</a>
-				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" id="profileLabel" data-target="#" href="profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<img src="http://www.campus-booster.net/actorpictures/${user.id}.jpg" alt="${user.id}" height="23">
-					</a>
-					<div class="dropdown-menu" aria-labelledby="profileLabel">
-						<h6 class="dropdown-header">${user.name}</h6>
-						<a class="dropdown-item" href="profile">Profile</a>
-						<a class="dropdown-item" href="logout">Logout</a>
-					</div>
-				</li>
+				<% if(request.getAttribute("user") != null) { %>
+					<li class="nav-item">
+						<a class="nav-link" href="bag">
+							<i class="fa fa-shopping-bag"></i>
+							<span class="label label-pill label-info">${user.bag.size()}</span>
+						</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="profileLabel" data-target="#" href="profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<img src="http://www.campus-booster.net/actorpictures/${user.id}.jpg" alt="${user.id}" height="23">
+						</a>
+						<div class="dropdown-menu" aria-labelledby="profileLabel">
+							<h6 class="dropdown-header">${user.name}</h6>
+							<a class="dropdown-item" href="profile">Profile</a>
+							<a class="dropdown-item" href="logout">Logout</a>
+						</div>
+					</li>
+				<% } else { %>
+					<li class="nav-item">
+						<a class="nav-link" href="login">Connexion</a>
+					</li>
+				<% } %>
 			</ul>
 		</nav>
 		<main class="container-fluid">
