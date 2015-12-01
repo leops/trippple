@@ -26,25 +26,22 @@ private EntityManager manager = null;
 	}
 	
 	@Override
-	public Trip findById(Long id)
-	{
+	public Trip findById(Long id) {
 		Trip result;
 		
 		try {
 			result = manager.find(Trip.class, id);
-		}
-		catch (NoResultException e){
+		} catch (NoResultException e){
 			result = null;
-		}
-		finally {
+		} finally {
 			manager.close();
 		}
+		
 		return result;	
 	}
 	
 	@Override
-	public Trip addTrip(Trip trip) // Trip en retour : on pourra exécuter une méthode sur la même ligne que l'ajout, ou vérifier le bon ajout de l'entité en vérifiant que le retour n'est pas égal à null
-	{
+	public Trip addTrip(Trip trip) { // Trip en retour : on pourra exécuter une méthode sur la même ligne que l'ajout, ou vérifier le bon ajout de l'entité en vérifiant que le retour n'est pas égal à null
 		Trip result = null;
 		
 		manager.getTransaction().begin();
@@ -52,46 +49,49 @@ private EntityManager manager = null;
 			manager.persist(trip);
 			manager.getTransaction().commit();
 			result = trip; // Si on a pas réussi l'ajout, on met le trip passé en paramètres dans result
-		}
-		finally {
-			if (manager.getTransaction().isActive())
-			{
+		} finally {
+			if (manager.getTransaction().isActive()) {
 				manager.getTransaction().rollback();
 			}
 		}
+		
 		return result;
 	}
 	
 	@Override
-	public void updateTrip(Trip trip)
-	{
+	public void updateTrip(Trip trip) {
 		manager.getTransaction().begin();
-		try{
+		try {
 			manager.merge(trip);
 			manager.getTransaction().commit();
-		}
-		finally {
-			if (manager.getTransaction().isActive())
-			{
+		} finally {
+			if (manager.getTransaction().isActive()) {
 				manager.getTransaction().rollback();
 			}
 		}
 	}
 	
 	@Override
-	public void removeTrip(Trip trip)
-	{
+	public void removeTrip(Trip trip) {
 		manager.getTransaction().begin();
-		try{
+		
+		try {
 			manager.remove(trip);
 			manager.getTransaction().commit();
-		}
-		finally {
-			if (manager.getTransaction().isActive())
-			{
+		} finally {
+			if (manager.getTransaction().isActive()) {
 				manager.getTransaction().rollback();
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Trip> findByCampus(String search) {
+		Query query = manager.createQuery("SELECT trip FROM Trip as trip WHERE trip.origin.name LIKE :search OR trip.destination.name LIKE :search");
+		query.setParameter("search", "%" + search + "%");
+
+		return (List<Trip>) query.getResultList();
 	}
 
 }

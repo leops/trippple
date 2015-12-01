@@ -9,10 +9,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.json.simple.JSONAware;
+import org.json.simple.JSONObject;
 
 @Entity
 @Table(name="Trips")
-public class Trip implements Serializable {
+public class Trip implements Serializable, JSONAware {
 
 	/**
 	 * Necessaire pour Serializable
@@ -53,6 +57,17 @@ public class Trip implements Serializable {
 
 	public void setDestination(Campus destination) {
 		this.destination = destination;
+	}
+
+	@Override
+	public String toJSONString() {
+		JSONObject obj = new JSONObject();
+		
+		obj.put("id", this.id);
+		obj.put("origin", this.origin);
+		obj.put("destination", this.destination);
+
+		return obj.toString();
 	}
 
 }

@@ -8,9 +8,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.json.simple.JSONAware;
+import org.json.simple.JSONObject;
+
 @Entity
 @Table(name="Campuses")
-public class Campus implements Serializable {
+public class Campus implements Serializable, JSONAware {
 	/**
 	 * Necessaire pour Serializable
 	 */
@@ -36,6 +39,16 @@ public class Campus implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Override
+	public String toJSONString() {
+		JSONObject obj = new JSONObject();
+		
+		obj.put("id", this.id);
+		obj.put("name", this.name);
+
+		return obj.toString();
 	}
 
 }
