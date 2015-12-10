@@ -3,3 +3,4 @@ persistence.xml
 .DS_STORE
 *postgresql*
 *mysql*
+node_modules/
