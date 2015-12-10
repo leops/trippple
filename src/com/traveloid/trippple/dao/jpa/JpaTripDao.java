@@ -1,6 +1,9 @@
 package com.traveloid.trippple.dao.jpa;
 
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -84,14 +87,26 @@ private EntityManager manager = null;
 			}
 		}
 	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Trip> findByCampus(String search) {
-		Query query = manager.createQuery("SELECT trip FROM Trip as trip WHERE trip.origin.name LIKE :search OR trip.destination.name LIKE :search");
-		query.setParameter("search", "%" + search + "%");
-
-		return (List<Trip>) query.getResultList();
+	
+	private class MatchCampus implements Predicate<Trip> {
+		private Pattern pattern;
+		
+		public MatchCampus(Pattern pattern) {
+			this.pattern = pattern;
+		}
+		
+		@Override
+		public boolean test(Trip trip) {
+			return pattern.matcher(trip.getDestination().getName()).find() || pattern.matcher(trip.getOrigin().getName()).find();
+		}
 	}
 
+	@Override
+	public List<Trip> findByCampus(String request) {
+		Pattern pattern = Pattern.compile(Pattern.quote(request), Pattern.CASE_INSENSITIVE);
+		
+		return findAll().stream()
+			.filter(new MatchCampus(pattern))
+			.collect(Collectors.toList());
+	}
 }
