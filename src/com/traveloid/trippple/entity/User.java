@@ -25,6 +25,7 @@ public class User implements Serializable {
 	 * Necessaire pour Serializable
 	 */
 	private static final long serialVersionUID = 7320015751377606756L;
+	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -33,8 +34,8 @@ public class User implements Serializable {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private byte[] password;
-	private byte[] salt = null;
+	private String password;
+	private String salt = null;
 
 	@ManyToMany
 	@JoinTable(name="Bags")
@@ -71,27 +72,54 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public byte[] getPassword() {
+	public String getPassword() {
 		return password;
 	}
 	
-	private byte[] genSalt() throws NoSuchAlgorithmException {
-		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[8];
-        random.nextBytes(salt);
-        return salt;
+	private static String bytesToHex(byte[] bytes) {
+	    char[] hexChars = new char[bytes.length * 2];
+	    for ( int j = 0; j < bytes.length; j++ ) {
+	        int v = bytes[j] & 0xFF;
+	        hexChars[j * 2] = hexArray[v >>> 4];
+	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+	    }
+	    return new String(hexChars);
 	}
-
-	public void setPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	
+	private static byte[] hexToBytes(String s) {
+	    int len = s.length();
+	    byte[] data = new byte[len / 2];
+	    for (int i = 0; i < len; i += 2) {
+	        data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+	                             + Character.digit(s.charAt(i+1), 16));
+	    }
+	    return data;
+	}
+	
+	private String encrypt(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		digest.reset();
 		
+		byte[] salt;
 		if(this.salt == null) {
-			this.salt = this.genSalt();
+			SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+			salt = new byte[8];
+			random.nextBytes(salt);
+			this.salt = bytesToHex(salt);
+		} else {
+			salt = hexToBytes(this.salt);
 		}
 		
-		digest.update(this.salt);
-		this.password = digest.digest(password.getBytes("UTF-8"));
+		digest.update(salt);
+		return bytesToHex(digest.digest(password.getBytes("UTF-8")));
+	}
+
+	public void setPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		this.password = encrypt(password);
+	}
+	
+	public Boolean comparePassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		return this.password == encrypt(password);
 	}
 
 	public Collection<Trip> getBag() {
