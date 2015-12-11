@@ -8,6 +8,14 @@ class Trip extends React.Component {
     </li>;
   }
 }
+
+class TripList extends React.Component {
+  render() {
+    return <ul className="list-group">
+      {this.props.data.map(trip => <Trip key={trip.id} trip={trip} />)}
+    </ul>;
+  }
+}
   
 class Search extends React.Component {
   constructor(props) {
@@ -37,9 +45,7 @@ class Search extends React.Component {
   }
 
   render() {
-    return <ul className="list-group">
-      {this.state.data.map(trip => <Trip trip={trip} />)}
-    </ul>;
+    return <TripList data={this.state.data} />;
   }
 }
 
