@@ -1,7 +1,10 @@
 class Trip extends React.Component {
   render() {
-    return <li>
-      {this.props.trip.origin.name} -> {this.props.trip.destination.name}
+    return <li className="list-group-item">
+      {this.props.trip.origin.name} <i className="fa fa-arrow-right"></i> {this.props.trip.destination.name}
+      <button className="btn btn-default btn-sm pull-right">
+      	<i className="fa fa-cart-arrow-down"></i>
+      </button>
     </li>;
   }
 }
@@ -34,7 +37,7 @@ class Search extends React.Component {
   }
 
   render() {
-    return <ul>
+    return <ul className="list-group">
       {this.state.data.map(trip => <Trip trip={trip} />)}
     </ul>;
   }
@@ -59,7 +62,7 @@ $('input[type="search"]').typeahead({
 	$('.form-inline').submit();
 });
 
-$('.form-inline').submit((evt) => {
+$('.form-inline').submit(function (evt) {
 	evt.preventDefault();
 	React.render(
 		<Search query={this.querySelector('.tt-input').value} />,

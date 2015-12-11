@@ -49,3 +49,7 @@ footer p {
 	color: #fff;
 	background-color: #0097cf;
 }
+
+.list-group-item .btn.btn-sm {
+	margin-top: -0.21875rem;
+}
