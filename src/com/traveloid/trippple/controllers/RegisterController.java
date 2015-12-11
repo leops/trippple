@@ -17,10 +17,10 @@ import com.traveloid.trippple.entity.User;
 import com.traveloid.trippple.util.TextUtils;
 
 /**
- * Servlet implementation class ProfileController
+ * Servlet implementation class RegisterController
  */
-@WebServlet("/profile")
-public class ProfileController extends HttpServlet {
+@WebServlet("/register")
+public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserDao dao;
 
@@ -38,12 +38,12 @@ public class ProfileController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User user = (User) request.getAttribute("user");
-		if(user == null) {
+		if(user != null) {
 			response.sendRedirect(request.getContextPath() + "/login");
 			return;
 		}
 
-		// TODO: Forward vers profile.jsp
+		// TODO Forward vers register.jsp
 	}
 
 	/**
@@ -52,11 +52,22 @@ public class ProfileController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User user = (User) request.getAttribute("user");
-		if(user == null) {
-			response.setStatus(401);
+		if(user != null) {
+			response.setStatus(403);
 			return;
 		}
 
+		user = new User();
+
+		long id;
+		try {
+			id = Long.parseLong(request.getParameter("id"));
+		} catch(NumberFormatException e) {
+			response.setStatus(400);
+			return;
+		}
+
+		user.setId(id);
 		user.setEmail(TextUtils.escapeHTML(request.getParameter("email")));
 		user.setFirstName(TextUtils.escapeHTML(request.getParameter("firstName")));
 		user.setLastName(TextUtils.escapeHTML(request.getParameter("lastName")));
@@ -71,7 +82,7 @@ public class ProfileController extends HttpServlet {
 			}
 		}
 
-		dao.updateUser(user);
+		dao.addUser(user);
 	}
 
 }
