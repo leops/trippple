@@ -17,7 +17,7 @@ import com.traveloid.trippple.entity.User;
  * Servlet implementation class LoginServlet
  */
 @WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+public class LoginControler extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**

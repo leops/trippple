@@ -6,62 +6,51 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-import jdk.nashorn.internal.runtime.regexp.JoniRegExp.Factory;
-
 import com.traveloid.trippple.dao.UserDao;
-import com.traveloid.trippple.entity.Campus;
 import com.traveloid.trippple.entity.User;
 import com.traveloid.trippple.util.PersistenceManager;
 
-public class JpaUserDao implements UserDao{
+public class JpaUserDao implements UserDao {
 
 	private EntityManager manager = null;
-	
-	public JpaUserDao()
-	{
+
+	public JpaUserDao() {
 		this.manager = PersistenceManager.getFactory().createEntityManager();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> findAll()
-	{
+	public List<User> findAll() {
 		Query query = manager.createQuery("SELECT campus FROM Campus As campus");
-		
-		return (List<User>) query.getResultList();
+
+		return query.getResultList();
 	}
-	
+
 	@Override
-	public User findById(Long id)
-	{
+	public User findById(Long id) {
 		User result;
-		
+
 		try {
 			result = manager.find(User.class, id);
-		}
-		catch (NoResultException e){
+		} catch(NoResultException e) {
 			result = null;
-		}
-		finally {
+		} finally {
 			manager.close();
 		}
 		return result;
 	}
-	
+
 	@Override
-	public User addUser(User user)
-	{
+	public User addUser(User user) {
 		User result = null;
-		
+
 		manager.getTransaction().begin();
 		try {
 			manager.persist(user);
 			manager.getTransaction().commit();
 			result = user;
-		}
-		finally {
-			if (manager.getTransaction().isActive())
-			{
+		} finally {
+			if(manager.getTransaction().isActive()) {
 				manager.getTransaction().rollback();
 			}
 		}
@@ -69,31 +58,26 @@ public class JpaUserDao implements UserDao{
 	}
 
 	@Override
-	public void updateUser(User user)
-	{
+	public void updateUser(User user) {
 		manager.getTransaction().begin();
-		try{
+		try {
 			manager.merge(user);
 			manager.getTransaction().commit();
-		}
-		finally {
-			if (manager.getTransaction().isActive())
-			{
+		} finally {
+			if(manager.getTransaction().isActive()) {
 				manager.getTransaction().rollback();
 			}
 		}
 	}
-	
-	public void removeUser(User user)
-	{
+
+	@Override
+	public void removeUser(User user) {
 		manager.getTransaction().begin();
-		try{
+		try {
 			manager.remove(user);
 			manager.getTransaction().commit();
-		}
-		finally {
-			if (manager.getTransaction().isActive())
-			{
+		} finally {
+			if(manager.getTransaction().isActive()) {
 				manager.getTransaction().rollback();
 			}
 		}
