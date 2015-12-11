@@ -36,7 +36,13 @@ public class ProfileController extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		User user = (User) request.getAttribute("user");
+		if(user == null) {
+			response.sendRedirect(request.getContextPath() + "/login");
+			return;
+		}
+
+		// TODO: Forward vers profile.jsp
 	}
 
 	private static String escapeHTML(String s) {
@@ -61,7 +67,7 @@ public class ProfileController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User user = (User) request.getAttribute("user");
 		if(user == null) {
-			response.sendRedirect(request.getContextPath() + "/login");
+			response.setStatus(401);
 			return;
 		}
 
