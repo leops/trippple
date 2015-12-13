@@ -39,7 +39,7 @@
 							<img src="http://www.campus-booster.net/actorpictures/${user.id}.jpg" alt="${user.id}" height="23">
 						</a>
 						<div class="dropdown-menu" aria-labelledby="profileLabel">
-							<h6 class="dropdown-header">${user.name}</h6>
+							<h6 class="dropdown-header">${user.firstName} ${user.lastName}</h6>
 							<a class="dropdown-item" href="profile">Profile</a>
 							<a class="dropdown-item" href="logout">Logout</a>
 						</div>
