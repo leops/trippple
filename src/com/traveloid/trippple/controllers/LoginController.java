@@ -25,6 +25,7 @@ public class LoginController extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String home = request.getContextPath();
 
 		long id;
 		try {
@@ -39,14 +40,22 @@ public class LoginController extends HttpServlet {
 
 		JpaUserDao userdao = new JpaUserDao();
 		User userInDb = userdao.findById(id);
+		if(userInDb == null) {
+			session.setAttribute("flash", "Unknown user");
+			response.sendRedirect(home);
+			return;
+		}
+
 		try {
-			if(id == userInDb.getId() && userInDb.comparePassword(password)) {
-				session.setAttribute("id", id);
+			if(userInDb.comparePassword(password)) {
+				session.setAttribute("user", id);
+			} else {
+				session.setAttribute("flash", "Incorrect password");
 			}
 		} catch(NoSuchAlgorithmException e) {
 			// Java trouve pas l'algo de cryptage == Il y a plus rien a faire a ce point
 		}
 
+		response.sendRedirect(home);
 	}
-
 }
