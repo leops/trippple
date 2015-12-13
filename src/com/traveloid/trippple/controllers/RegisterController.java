@@ -11,8 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.traveloid.trippple.dao.CampusDao;
 import com.traveloid.trippple.dao.UserDao;
+import com.traveloid.trippple.dao.jpa.JpaCampusDao;
 import com.traveloid.trippple.dao.jpa.JpaUserDao;
+import com.traveloid.trippple.entity.Campus;
 import com.traveloid.trippple.entity.User;
 import com.traveloid.trippple.util.TextUtils;
 
@@ -22,14 +25,16 @@ import com.traveloid.trippple.util.TextUtils;
 @WebServlet("/register")
 public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private UserDao dao;
+	private UserDao userDao;
+	private CampusDao campusDao;
 
 	/**
 	 * @see Servlet#init(ServletConfig)
 	 */
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		dao = new JpaUserDao();
+		userDao = new JpaUserDao();
+		campusDao = new JpaCampusDao();
 	}
 
 	/**
@@ -42,6 +47,8 @@ public class RegisterController extends HttpServlet {
 			response.sendRedirect(request.getContextPath());
 			return;
 		}
+
+		request.setAttribute("campuses", this.campusDao.findAll());
 
 		request.getRequestDispatcher("register.jsp").forward(request, response);
 	}
@@ -75,6 +82,22 @@ public class RegisterController extends HttpServlet {
 		user.setFirstName(TextUtils.escapeHTML(request.getParameter("firstName")));
 		user.setLastName(TextUtils.escapeHTML(request.getParameter("lastName")));
 
+		long campusId;
+		try {
+			campusId = Long.parseLong(request.getParameter("campus"));
+		} catch(NumberFormatException e) {
+			request.getSession().setAttribute("flash", "Incorrect Campus");
+			response.sendRedirect(home + "/register");
+			return;
+		}
+
+		Campus campus = this.campusDao.findById(campusId);
+		if(campus == null) {
+			request.getSession().setAttribute("flash", "Incorrect Campus");
+			response.sendRedirect(home + "/register");
+			return;
+		}
+
 		String primPass = request.getParameter("primPassword"), secPass = request.getParameter("secPassword");
 
 		if(primPass.equals(secPass)) {
@@ -89,7 +112,13 @@ public class RegisterController extends HttpServlet {
 			return;
 		}
 
-		dao.addUser(user);
+		try {
+			userDao.addUser(user);
+		} catch(Exception e) {
+			request.getSession().setAttribute("flash", "Unkown error");
+			response.sendRedirect(home + "/register");
+			return;
+		}
 
 		response.sendRedirect(home);
 	}

@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -45,6 +46,9 @@ public class User implements Serializable {
 	@JoinTable(name = "Orders")
 	@Fetch(FetchMode.SELECT)
 	private Collection<Trip> ordered;
+
+	@ManyToOne
+	private Campus campus;
 
 	public long getId() {
 		return id;
@@ -122,5 +126,13 @@ public class User implements Serializable {
 
 	public void setOrdered(Collection<Trip> ordered) {
 		this.ordered = ordered;
+	}
+
+	public Campus getCampus() {
+		return this.campus;
+	}
+
+	public void setCampus(Campus campus) {
+		this.campus = campus;
 	}
 }

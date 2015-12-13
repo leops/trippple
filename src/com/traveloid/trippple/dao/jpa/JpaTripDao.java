@@ -14,53 +14,59 @@ import com.traveloid.trippple.entity.Trip;
 import com.traveloid.trippple.util.PersistenceManager;
 
 public class JpaTripDao implements TripDao {
-private EntityManager manager = null;
-	
+	private EntityManager manager = null;
+
 	public JpaTripDao() {
 		this.manager = PersistenceManager.getFactory().createEntityManager();
 	}
 
-	@SuppressWarnings("unchecked") // masque les erreurs liées au cast (ligne 25). De base, il faut vérifier la bonne exécution d'un cast
+	public void destroy() {
+		if(this.manager.isOpen()) {
+			this.manager.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	// masque les erreurs liées au cast (ligne 25). De base, il faut vérifier la bonne exécution d'un cast
 	@Override
 	public List<Trip> findAll() {
 		Query query = manager.createQuery("SELECT trip FROM Trip as trip");
 
-		return (List<Trip>) query.getResultList();
+		return query.getResultList();
 	}
-	
+
 	@Override
 	public Trip findById(Long id) {
 		Trip result;
-		
+
 		try {
 			result = manager.find(Trip.class, id);
-		} catch (NoResultException e){
+		} catch(NoResultException e) {
 			result = null;
-		} finally {
-			manager.close();
 		}
-		
-		return result;	
+
+		return result;
 	}
-	
+
 	@Override
-	public Trip addTrip(Trip trip) { // Trip en retour : on pourra exécuter une méthode sur la même ligne que l'ajout, ou vérifier le bon ajout de l'entité en vérifiant que le retour n'est pas égal à null
+	public Trip addTrip(Trip trip) { // Trip en retour : on pourra exécuter une méthode sur la même ligne que l'ajout, ou vérifier le bon ajout de l'entité en vérifiant que le
+										// retour n'est pas égal à null
 		Trip result = null;
-		
+
 		manager.getTransaction().begin();
 		try {
 			manager.persist(trip);
 			manager.getTransaction().commit();
 			result = trip; // Si on a pas réussi l'ajout, on met le trip passé en paramètres dans result
 		} finally {
-			if (manager.getTransaction().isActive()) {
+			if(manager.getTransaction().isActive()) {
 				manager.getTransaction().rollback();
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	@Override
 	public void updateTrip(Trip trip) {
 		manager.getTransaction().begin();
@@ -68,33 +74,33 @@ private EntityManager manager = null;
 			manager.merge(trip);
 			manager.getTransaction().commit();
 		} finally {
-			if (manager.getTransaction().isActive()) {
+			if(manager.getTransaction().isActive()) {
 				manager.getTransaction().rollback();
 			}
 		}
 	}
-	
+
 	@Override
 	public void removeTrip(Trip trip) {
 		manager.getTransaction().begin();
-		
+
 		try {
 			manager.remove(trip);
 			manager.getTransaction().commit();
 		} finally {
-			if (manager.getTransaction().isActive()) {
+			if(manager.getTransaction().isActive()) {
 				manager.getTransaction().rollback();
 			}
 		}
 	}
-	
+
 	private class MatchCampus implements Predicate<Trip> {
 		private Pattern pattern;
-		
+
 		public MatchCampus(Pattern pattern) {
 			this.pattern = pattern;
 		}
-		
+
 		@Override
 		public boolean test(Trip trip) {
 			return pattern.matcher(trip.getDestination().getName()).find() || pattern.matcher(trip.getOrigin().getName()).find();
@@ -104,9 +110,9 @@ private EntityManager manager = null;
 	@Override
 	public List<Trip> findByCampus(String request) {
 		Pattern pattern = Pattern.compile(Pattern.quote(request), Pattern.CASE_INSENSITIVE);
-		
+
 		return findAll().stream()
-			.filter(new MatchCampus(pattern))
-			.collect(Collectors.toList());
+				.filter(new MatchCampus(pattern))
+				.collect(Collectors.toList());
 	}
 }
