@@ -20,6 +20,8 @@
 						<span class="input-group-addon"><i class="fa fa-lock"></i></span>
 						<input type="password" class="form-control" name="password" placeholder="Password">
 					</div>
+					
+					<p>${flash}</p>
 		
 					<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
 				</form>

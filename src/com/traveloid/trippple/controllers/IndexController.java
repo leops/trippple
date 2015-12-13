@@ -47,7 +47,7 @@ public class IndexController extends HttpServlet {
 		RequestDispatcher dispatcher;
 		User user = (User) request.getAttribute("user");
 		if(user == null) {
-			dispatcher = request.getRequestDispatcher("index.jsp");
+			dispatcher = request.getRequestDispatcher("home.jsp");
 			request.setAttribute("users", this.userDao.findAll());
 		} else {
 			dispatcher = request.getRequestDispatcher("trips.jsp");
