@@ -18,6 +18,12 @@ public class JpaUserDao implements UserDao {
 		this.manager = PersistenceManager.getFactory().createEntityManager();
 	}
 
+	public void destroy() {
+		if(this.manager.isOpen()) {
+			this.manager.close();
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> findAll() {
@@ -34,9 +40,8 @@ public class JpaUserDao implements UserDao {
 			result = manager.find(User.class, id);
 		} catch(NoResultException e) {
 			result = null;
-		} finally {
-			manager.close();
 		}
+
 		return result;
 	}
 
