@@ -2,9 +2,9 @@ class Trip extends React.Component {
   render() {
     return <li className="list-group-item">
       {this.props.trip.origin.name} <i className="fa fa-arrow-right"></i> {this.props.trip.destination.name}
-      <button className="btn btn-default btn-sm pull-right">
+      <a href={'addtrip?id=' + this.props.trip.id} className="btn btn-default btn-sm pull-right">
       	<i className="fa fa-cart-arrow-down"></i>
-      </button>
+      </a>
     </li>;
   }
 }
