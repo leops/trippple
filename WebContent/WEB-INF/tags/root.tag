@@ -13,17 +13,19 @@
 	</head>
 	<body>
 		<nav class="navbar navbar-fixed-top navbar-dark bg-primary">
-			<a class="navbar-brand" href="/">Trippple</a>
-			<form class="form-inline navbar-form pull-left" method="POST" action="search">
-				<div class="input-group">
-					<input type="search" class="form-control" placeholder="Search" name="query">
-					<span class="input-group-btn">
-						<button class="btn btn-secondary-outline" type="submit">
-							<i class="fa fa-search"></i>
-						</button>
-					</span>
-				</div>
-			</form>
+			<a class="navbar-brand" href="${pageContext.request.contextPath}">Trippple</a>
+			<% if(request.getAttribute("user") != null) { %>
+				<form class="form-inline navbar-form pull-left" method="POST" action="search">
+					<div class="input-group">
+						<input type="search" class="form-control" placeholder="Search" name="query">
+						<span class="input-group-btn">
+							<button class="btn btn-secondary-outline" type="submit">
+								<i class="fa fa-search"></i>
+							</button>
+						</span>
+					</div>
+				</form>
+			<% } %>
 			<ul class="nav navbar-nav pull-right">
 				<% if(request.getAttribute("user") != null) { %>
 					<li class="nav-item">
@@ -42,14 +44,10 @@
 							<a class="dropdown-item" href="logout">Logout</a>
 						</div>
 					</li>
-				<% } else { %>
-					<li class="nav-item">
-						<a class="nav-link" href="login">Connexion</a>
-					</li>
 				<% } %>
 			</ul>
 		</nav>
-		<main class="container-fluid">
+		<main class="container">
 			<jsp:doBody />
 		</main>
 		<footer class="container-fluid">
