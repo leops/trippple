@@ -39,11 +39,11 @@ public class ProfileController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User user = (User) request.getAttribute("user");
 		if(user == null) {
-			response.sendRedirect(request.getContextPath() + "/login");
+			response.sendRedirect(request.getContextPath());
 			return;
 		}
 
-		// TODO: Forward vers profile.jsp
+		request.getRequestDispatcher("profile.jsp").forward(request, response);
 	}
 
 	/**
@@ -51,6 +51,8 @@ public class ProfileController extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String home = request.getContextPath();
+
 		User user = (User) request.getAttribute("user");
 		if(user == null) {
 			response.setStatus(401);
@@ -63,15 +65,19 @@ public class ProfileController extends HttpServlet {
 
 		String primPass = request.getParameter("primPassword"), secPass = request.getParameter("secPassword");
 
-		if(primPass.equals(secPass)) {
+		if(primPass.length() > 0 && primPass.equals(secPass)) {
 			try {
 				user.setPassword(primPass);
 			} catch(NoSuchAlgorithmException e) {
 				// Pas d'algo, pas de crypto
 			}
+		} else {
+			request.getSession().setAttribute("flash", "Passwords did not match");
 		}
 
 		dao.updateUser(user);
+
+		response.sendRedirect(home);
 	}
 
 }
