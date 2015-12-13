@@ -39,11 +39,11 @@ public class RegisterController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User user = (User) request.getAttribute("user");
 		if(user != null) {
-			response.sendRedirect(request.getContextPath() + "/login");
+			response.sendRedirect(request.getContextPath());
 			return;
 		}
 
-		// TODO Forward vers register.jsp
+		request.getRequestDispatcher("register.jsp").forward(request, response);
 	}
 
 	/**
@@ -51,6 +51,8 @@ public class RegisterController extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String home = request.getContextPath();
+
 		User user = (User) request.getAttribute("user");
 		if(user != null) {
 			response.setStatus(403);
@@ -63,7 +65,8 @@ public class RegisterController extends HttpServlet {
 		try {
 			id = Long.parseLong(request.getParameter("id"));
 		} catch(NumberFormatException e) {
-			response.setStatus(400);
+			request.getSession().setAttribute("flash", "Incorrect ID");
+			response.sendRedirect(home + "/register");
 			return;
 		}
 
@@ -80,9 +83,15 @@ public class RegisterController extends HttpServlet {
 			} catch(NoSuchAlgorithmException e) {
 				// Pas d'algo, pas de crypto
 			}
+		} else {
+			request.getSession().setAttribute("flash", "Passwords do not match");
+			response.sendRedirect(home + "/register");
+			return;
 		}
 
 		dao.addUser(user);
+
+		response.sendRedirect(home);
 	}
 
 }
