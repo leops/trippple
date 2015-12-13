@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 
 import com.traveloid.trippple.dao.UserDao;
+import com.traveloid.trippple.dao.jpa.JpaTripDao;
 import com.traveloid.trippple.dao.jpa.JpaUserDao;
 import com.traveloid.trippple.entity.Trip;
 import com.traveloid.trippple.entity.User;
@@ -67,5 +68,33 @@ public class BagController {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@GET
+	@Path("/add")
+	public void addTrip(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {
+		String home = request.getContextPath();
+
+		User user = (User) request.getAttribute("user");
+		if(user == null) {
+			response.sendRedirect(home);
+			return;
+		}
+
+		long tripId = Long.parseLong(request.getParameter("id"));
+
+		JpaTripDao tripDao = new JpaTripDao();
+		Trip trip = tripDao.findById(tripId);
+		if(trip == null) {
+			response.sendRedirect(home);
+			return;
+		}
+
+		Collection<Trip> bag = user.getBag();
+		if(!bag.contains(trip)) {
+			bag.add(trip);
+		}
+
+		response.sendRedirect(home);
 	}
 }
