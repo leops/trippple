@@ -10,7 +10,7 @@
 				<i class="fa fa-arrow-right" data-reactid=".0.$${trip.id}.2"></i>
 				<span data-reactid=".0.$${trip.id}.3"> </span>
 				<span data-reactid=".0.$${trip.id}.4">${trip.destination.name}</span>
-				<a href="addtrip?id=${trip.id}" class="btn btn-default btn-sm pull-right" data-reactid=".0.$${trip.id}.5">
+				<a href="api/bag/add?id=${trip.id}" class="btn btn-default btn-sm pull-right" data-reactid=".0.$${trip.id}.5">
 					<i class="fa fa-cart-arrow-down" data-reactid=".0.$${trip.id}.5.0"></i>
 				</a>
 			</li>
