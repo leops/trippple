@@ -7,13 +7,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Collection;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Entity;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.traveloid.trippple.util.TextUtils;
 
@@ -35,16 +37,14 @@ public class User implements Serializable {
 	private String password;
 	private String salt = null;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Bags")
 	private Collection<Trip> bag;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Orders")
+	@Fetch(FetchMode.SELECT)
 	private Collection<Trip> ordered;
-
-	@OneToMany(mappedBy = "")
-	private Campus campus;
 
 	public long getId() {
 		return id;
@@ -105,7 +105,7 @@ public class User implements Serializable {
 	}
 
 	public boolean comparePassword(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		return this.password == encrypt(text);
+		return this.password.equals(encrypt(text));
 	}
 
 	public Collection<Trip> getBag() {
@@ -123,13 +123,4 @@ public class User implements Serializable {
 	public void setOrdered(Collection<Trip> ordered) {
 		this.ordered = ordered;
 	}
-
-	public Campus getCampus() {
-		return campus;
-	}
-
-	public void setCampus(Campus campus) {
-		this.campus = campus;
-	}
-
 }
