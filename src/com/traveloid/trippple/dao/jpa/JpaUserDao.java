@@ -21,7 +21,7 @@ public class JpaUserDao implements UserDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> findAll() {
-		Query query = manager.createQuery("SELECT campus FROM Campus As campus");
+		Query query = manager.createQuery("SELECT user FROM User As user");
 
 		return query.getResultList();
 	}
